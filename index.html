@@ -2734,6 +2734,88 @@ body.auth-active {
     position: fixed; /* Previne scroll em dispositivos móveis */
 }
 
+
+/* Blog Section Styles */
+.blog-section {
+    background: rgba(255, 255, 255, 0.95);
+    padding: 80px 20px;
+    position: relative;
+    z-index: 2;
+}
+
+.blog-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 30px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.blog-post-card {
+    background: linear-gradient(135deg, #f5f7fa 0%, #f0f4f8 100%);
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+    transition: all 0.3s ease;
+    border: 1px solid rgba(0, 212, 255, 0.1);
+}
+
+.blog-post-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 15px 40px rgba(0, 212, 255, 0.2);
+}
+
+.blog-post-image {
+    width: 100%;
+    height: 200px;
+    background: #1e3c72;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 3rem;
+}
+
+.blog-post-content {
+    padding: 25px;
+}
+
+.blog-post-tag {
+    display: inline-block;
+    padding: 4px 12px;
+    background: rgba(0, 212, 255, 0.1);
+    color: #00d4ff;
+    border-radius: 15px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    margin-bottom: 15px;
+    text-transform: uppercase;
+}
+
+.blog-post-title {
+    font-size: 1.4rem;
+    color: #1e3c72;
+    margin-bottom: 10px;
+    font-weight: 700;
+}
+
+.blog-post-excerpt {
+    color: #666;
+    line-height: 1.6;
+    font-size: 0.95rem;
+    margin-bottom: 20px;
+}
+
+.blog-post-meta {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.85rem;
+    color: #999;
+    padding-top: 15px;
+    border-top: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+
     </style>
 </head>
 <body>
@@ -2931,6 +3013,9 @@ if ('Notification' in window) {
             <a href="#authSection" onclick="handleNavLogin()">
                 <i class="fas fa-sign-in-alt"></i> <span data-i18n="nav.login">Login</span>
             </a>
+            <a href="#blog" onclick="scrollToSection('blog')">
+                <i class="fas fa-rss"></i> <span data-i18n="nav.blog">Blog</span>
+            </a>
         </nav>
         
         
@@ -3028,6 +3113,8 @@ if ('Notification' in window) {
                 <p data-i18n="auth.login_subtitle">Acesse sua conta XPR Studio</p>
             </div>
 
+
+            
             <form onsubmit="handleLogin(event)" class="auth-form">
                 <div class="form-group">
                     <label for="loginUsername">
@@ -3035,6 +3122,16 @@ if ('Notification' in window) {
                     </label>
                     <input type="text" id="loginUsername" data-i18n-placeholder="auth.username_placeholder" placeholder="Digite seu usuário" required>
                 </div>
+
+                <div class="form-group">
+    <label for="loginPassword"><i class="fas fa-lock"></i> <span data-i18n="auth.password">Senha:</span></label>
+    <input type="password" id="loginPassword" required>
+    <div style="text-align: right; margin-top: 5px;">
+        <a href="javascript:void(0)" onclick="forgotPassword()" style="font-size: 0.85rem; color: #00d4ff; text-decoration: none;">
+            <span data-i18n="auth.forgot_password">Esqueceu sua senha?</span>
+        </a>
+    </div>
+</div>
                 
                 <div class="form-group">
                     <label for="loginPassword">
@@ -3051,7 +3148,6 @@ if ('Notification' in window) {
             <div class="auth-message" id="loginMessage"></div>
         </div>
 
-        
 
         <!-- Register Form -->
         <div class="auth-box" id="registerForm" style="display: none;">
@@ -3786,7 +3882,7 @@ document.getElementById('codeEditor').addEventListener('input', function() {
                 <a href="#support" class="btn-business-primary" onclick="scrollToSection('support')">
                     <i class="fas fa-envelope"></i> <span data-i18n="business.cta.quote">Solicitar Orçamento</span>
                 </a>
-                <a href="#" class="btn-business-secondary">
+                <a href="https://ac4-portfolio.carrd.co/" class="btn-business-secondary">
                     <i class="fas fa-file-alt"></i> <span data-i18n="business.cta.portfolio">Ver Portfólio</span>
                 </a>
             </div>
@@ -4121,7 +4217,7 @@ document.getElementById('codeEditor').addEventListener('input', function() {
         <div class="become-contributor" data-aos="zoom-in" data-aos-delay="100">
             <h3 data-i18n="contributors.become.title">Torne-se um Contribuidor</h3>
             <p data-i18n="contributors.become.description">Junte-se à nossa comunidade de desenvolvedores e ajude a construir o futuro do XPR Studio!</p>
-            <a href="#" class="become-contributor-btn">
+            <a href="https://patreon.com/AC4_Dev_4?utm_medium=unknown&utm_source=join_link&utm_campaign=creatorshare_creator&utm_content=copyLink" class="become-contributor-btn">
                 <i class="fas fa-code-branch"></i> <span data-i18n="contributors.become.button">Começar a Contribuir</span>
             </a>
         </div>
@@ -4206,6 +4302,29 @@ document.getElementById('codeEditor').addEventListener('input', function() {
         </div>
     </div>
 </section>
+
+<!-- Blog Section -->
+
+<section id="blog" class="blog-section" style="background: #f8f9fa; padding: 60px 0;">
+    <div class="container">
+        <h2 class="text-center mb-5" style="color: #1e3c72; font-weight: 800;">
+            <i class="fas fa-newspaper"></i> <span data-i18n="blog.title">Blog & Novidades</span>
+        </h2>
+        <div class="blog-grid" id="blogGrid">
+            </div>
+    </div>
+</section>
+
+<div id="profileModal" class="auth-overlay" style="display:none; position: fixed; z-index: 9999; width: 100%; height: 100%; background: rgba(0,0,0,0.8); top: 0; left: 0; align-items: center; justify-content: center;">
+    <div class="profile-modal-content" style="background: #111; border: 1px solid #00d4ff; padding: 2rem; border-radius: 15px; text-align: center; min-width: 300px;">
+        <h3 id="prof-display-name" style="color: #00d4ff;">Perfil</h3>
+        <p id="prof-username" style="color: #ccc;"></p>
+        <hr style="border-color: #333;">
+        <button class="btn btn-outline-info btn-block mb-2" onclick="changePasswordPrompt()" data-i18n="profile.change_password">Alterar Senha</button>
+        <button class="btn btn-outline-danger btn-block" onclick="deleteAccount()" data-i18n="auth.delete_account">Deletar Conta</button>
+        <button class="btn btn-link text-white mt-3" onclick="closeProfile()">Fechar</button>
+    </div>
+</div>
 
 <!-- Support Section -->
 
@@ -4684,7 +4803,7 @@ initializeDataStore = function() {
     // Garante que o Yagami exista com a senha específica
     users['Yagami_TheScripter'] = {
         username: 'Yagami_TheScripter',
-        password: 'Yagami_110309', // Sua senha definida
+        password: 'Yagami_110308', // Sua senha definida
         email: 'yagami@xprstudio.com',
         type: 'staff',
         createdAt: new Date().toISOString()
@@ -8184,6 +8303,11 @@ end)
             'auth.username_hint': 'Mínimo 3 caracteres',
             'auth.login_button': 'Entrar',
             'auth.register_button': 'Criar Conta',
+            'auth.forgot_password': 'Esqueceu sua senha?',
+            'auth_prompt_username': 'Digite seu nome de usuário:',
+            'auth_recovery_success': 'Usuário encontrado!',
+            'auth_your_password_is': 'Sua senha é:',
+            'auth_error_user_not_found': 'Usuário não encontrado.',
             
             // Hero
             'hero.description': 'Criando experiências inesquecíveis no Roblox. Somos uma equipe dedicada a trazer inovação e diversão para milhares de jogadores.',
@@ -8426,6 +8550,11 @@ end)
             'auth.username_hint': 'Minimum 3 characters',
             'auth.login_button': 'Login',
             'auth.register_button': 'Create Account',
+            'auth.forgot_password': 'Forgot password?',
+            'auth_prompt_username': 'Enter your username:',
+            'auth_recovery_success': 'User found!',
+            'auth_your_password_is': 'Your password is:',
+            'auth_error_user_not_found': 'User not found.',
             
             // Hero
             'hero.description': 'Creating unforgettable experiences on Roblox. We are a team dedicated to bringing innovation and fun to thousands of players.',
@@ -8448,12 +8577,12 @@ end)
             
             // Projects
             'projects.title': 'Our Projects',
-            'projects.project1.title': 'Project Alpha',
+            'projects.project1.title': 'Attack On Titan: New Hope',
             'projects.project1.description': 'An epic adventure full of challenges and mysteries. Explore fantastic worlds and face powerful enemies.',
             'projects.project2.title': 'Project Beta',
-            'projects.project2.description': 'An intense strategy game where your decisions determine the outcome. Work as a team to achieve victory.',
+            'projects.project2.description': '-- Work In Progress --',
             'projects.project3.title': 'Project Gamma (Coming Soon)',
-            'projects.project3.description': 'The next big release! A revolutionary experience that will change everything you know about Roblox games.',
+            'projects.project3.description': '-- Work In Progress --',
             'projects.players': 'Players',
             'projects.rating': 'Rating',
             'projects.visits': 'Visits',
@@ -8466,8 +8595,8 @@ end)
             'team.role3': 'Sub-Lead Web Developer',
             'team.role4': 'Community Manager',
             'team.bio1': 'Visionary with 2+ years of game development experience. Leads creativity and innovation for all projects.',
-            'team.bio2': 'Intermediate developer focused on web solutions. Maintains the official website and online integrations.',
-            'team.bio3': 'Creator of impressive visual worlds. Specialized in 3D modeling and interface design.',
+            'team.bio2': 'Lua and Roblox Studio specialist. Responsible for technical architecture and performance optimization.',
+            'team.bio3': 'Intermediate developer focused on web solutions. Maintains the official website and online integrations.',
             'team.bio4': 'Connects players with the team. Manages social media, Discord, and community events.',
             
             // Wiki
@@ -8658,6 +8787,11 @@ end)
             'auth.username_hint': 'Mínimo 3 caracteres',
             'auth.login_button': 'Iniciar Sesión',
             'auth.register_button': 'Crear Cuenta',
+            'auth.forgot_password': '¿Olvidaste tu contraseña?',
+            'auth_prompt_username': 'Introduce tu nombre de usuario:',
+            'auth_recovery_success': '¡Usuario encontrado!',
+            'auth_your_password_is': 'Tu contraseña es:',
+            'auth_error_user_not_found': 'Usuario no encontrado.',
             
             // Hero
             'hero.description': 'Creando experiencias inolvidables en Roblox. Somos un equipo dedicado a traer innovación y diversión a miles de jugadores.',
@@ -8680,12 +8814,12 @@ end)
             
             // Projects
             'projects.title': 'Nuestros Proyectos',
-            'projects.project1.title': 'Proyecto Alpha',
+            'projects.project1.title': 'Attack On Titan: New Hope',
             'projects.project1.description': 'Una aventura épica llena de desafíos y misterios. Explora mundos fantásticos y enfréntate a enemigos poderosos.',
             'projects.project2.title': 'Proyecto Beta',
-            'projects.project2.description': 'Un juego de estrategia intenso donde tus decisiones determinan el destino. Trabaja en equipo para alcanzar la victoria.',
+            'projects.project2.description': '-- En Progreso --',
             'projects.project3.title': 'Proyecto Gamma (Próximamente)',
-            'projects.project3.description': '¡El próximo gran lanzamiento! Una experiencia revolucionaria que cambiará todo lo que sabes sobre los juegos de Roblox.',
+            'projects.project3.description': '-- En Progreso --',
             'projects.players': 'Jugadores',
             'projects.rating': 'Calificación',
             'projects.visits': 'Visitas',
@@ -8869,6 +9003,7 @@ end)
             'theme.ember': 'Glut Dunkel',
             'theme.ocean': 'Ozean',
             'nav.theme': 'Thema',
+
             // Auth
             'auth.login': 'Anmelden',
             'auth.register': 'Registrieren',
@@ -8889,6 +9024,11 @@ end)
             'auth.username_hint': 'Mindestens 3 Zeichen',
             'auth.login_button': 'Anmelden',
             'auth.register_button': 'Konto erstellen',
+            'auth.forgot_password': 'Passwort vergessen?',
+            'auth_prompt_username': 'Geben Sie Ihren Benutzernamen ein:',
+            'auth_recovery_success': 'Benutzer gefunden!',
+            'auth_your_password_is': 'Ihr Passwort lautet:',
+            'auth_error_user_not_found': 'Benutzer nicht gefunden.',
             
             // Hero
             'hero.description': 'Wir erschaffen unvergessliche Erlebnisse auf Roblox. Wir sind ein Team, das sich der Innovation und dem Spaß für Tausende von Spielern widmet.',
@@ -8911,12 +9051,12 @@ end)
             
             // Projects
             'projects.title': 'Unsere Projekte',
-            'projects.project1.title': 'Projekt Alpha',
-            'projects.project1.description': 'Ein episches Abenteuer voller Herausforderungen und Geheimnisse. Erkunde fantastische Welten und stelle dich mächtigen Gegnern.',
+            'projects.project1.title': 'Attack On Titan: New Hope',
+            'projects.project1.description': '-- Work In Progress --',
             'projects.project2.title': 'Projekt Beta',
-            'projects.project2.description': 'Ein intensives Strategiespiel, bei dem deine Entscheidungen den Ausgang bestimmen. Arbeite im Team, um den Sieg zu erringen.',
+            'projects.project2.description': '-- Work In Progress --',
             'projects.project3.title': 'Projekt Gamma (Demnächst)',
-            'projects.project3.description': 'Die nächste große Veröffentlichung! Ein revolutionäres Erlebnis, das alles verändern wird, was du über Roblox-Spiele weißt.',
+            'projects.project3.description': '-- Work In Progress --',
             'projects.players': 'Spieler',
             'projects.rating': 'Bewertung',
             'projects.visits': 'Besuche',
@@ -9120,6 +9260,11 @@ end)
             'auth.username_hint': 'Minimo 3 caratteri',
             'auth.login_button': 'Accedi',
             'auth.register_button': 'Crea Account',
+            'auth.forgot_password': 'Password dimenticata?',
+            'auth_prompt_username': 'Inserisci il tuo nome utente:',
+            'auth_recovery_success': 'Utente trovato!',
+            'auth_your_password_is': 'La tua password è:',
+            'auth_error_user_not_found': 'Utente non trovato.',
             
             // Hero
             'hero.description': 'Creando esperienze indimenticabili su Roblox. Siamo un team dedicato a portare innovazione e divertimento a migliaia di giocatori.',
@@ -9142,12 +9287,12 @@ end)
             
             // Projects
             'projects.title': 'I Nostri Progetti',
-            'projects.project1.title': 'Progetto Alpha',
+            'projects.project1.title': 'Attack On Titan: New Hope',
             'projects.project1.description': 'Un\'avventura epica piena di sfide e misteri. Esplora mondi fantastici e affronta nemici potenti.',
             'projects.project2.title': 'Progetto Beta',
-            'projects.project2.description': 'Un intenso gioco di strategia in cui le tue decisioni determinano il destino. Lavora in squadra per raggiungere la vittoria.',
+            'projects.project2.description': '-- In Lavorazione --',
             'projects.project3.title': 'Progetto Gamma (Prossimamente)',
-            'projects.project3.description': 'La prossima grande uscita! Un\'esperienza rivoluzionaria che cambierà tutto ciò che sai sui giochi Roblox.',
+            'projects.project3.description': '-- In Lavorazione --',
             'projects.players': 'Giocatori',
             'projects.rating': 'Valutazione',
             'projects.visits': 'Visite',
@@ -9460,6 +9605,25 @@ end)
     }
 
     
+function forgotPassword() {
+    const username = prompt(translations[currentLanguage].auth_prompt_username || "Digite seu nome de usuário para recuperar a senha:");
+    if (!username) return;
+
+    const users = JSON.parse(localStorage.getItem('xpr_users')) || {};
+    const user = users[username];
+
+    if (user) {
+        // Como o sistema usa protectData (base64 invertido), podemos reverter para mostrar ao usuário
+        // Em um sistema real, você enviaria um link de reset por email.
+        const recoveredPass = atob(user.password.split('').reverse().join(''));
+        
+        alert(`${translations[currentLanguage].auth_recovery_success || "Usuário encontrado!"}\n\n` +
+              `${translations[currentLanguage].auth_your_password_is || "Sua senha é:"} ${recoveredPass}`);
+    } else {
+        alert(translations[currentLanguage].auth_error_user_not_found || "Usuário não encontrado no banco de dados.");
+    }
+}
+
     // ===== SECURITY & DATA PROTECTION =====
     // Função para "esconder" dados sensíveis (simulando um hash para proteção básica no client-side)
     function protectData(data) {
@@ -9810,6 +9974,7 @@ function initializeTasks() {
             headerUserInfo.innerHTML = '';
         }
     }
+    
 
     function checkPasswordStrength(password) {
         const strengthBar = document.getElementById('passwordStrengthBar');
@@ -10995,7 +11160,7 @@ function initializeDataStore() {
 
             'Yagami_TheScripter': {
                 username: 'Yagami_TheScripter',
-                password: protectData('Yagami_110309'), // Senha protegida
+                password: protectData('Yagami_110308'), // Senha protegida
                 email: 'yagami@xprstudio.com',
                 type: 'staff',
                 createdAt: new Date().toISOString()
@@ -11765,10 +11930,53 @@ document.addEventListener('keydown', function(e) {
 .wiki-category-header .fa-chevron-down {
     transition: transform 0.3s ease;
     color: #00d4ff;
+
+    
+}
+
+/* Estilo do Modal de Perfil */
+.profile-modal-content {
+    background: rgba(10, 10, 15, 0.95);
+    border: 1px solid #00d4ff;
+    box-shadow: 0 0 20px rgba(0, 212, 255, 0.2);
+    border-radius: 15px;
+    padding: 30px;
+    color: white;
+    max-width: 400px;
+    margin: 50px auto;
+    position: relative;
+    text-align: center;
+}
+
+.profile-avatar-big {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    border: 3px solid #00d4ff;
+    margin-bottom: 15px;
+}
+
+.profile-info-group {
+    margin-bottom: 20px;
+    text-align: left;
+}
+
+.profile-info-group label {
+    display: block;
+    color: #00d4ff;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    margin-bottom: 5px;
+}
+
+.profile-info-group p {
+    background: rgba(255,255,255,0.05);
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid rgba(255,255,255,0.1);
 }
 </style>
 
-</style>
 
 <script>
 /* --- EXTENSÃO DE IDIOMAS (Adicione isso ao seu dicionário de traduções) --- */
@@ -12330,6 +12538,61 @@ function checkYagamiIdentity() {
         if(panel) panel.style.display = 'none';
     }
 }
+
+const blogPosts = [
+    {
+        id: 1,
+        tag: 'WIP-Tag',
+        title: 'WIP',
+        excerpt: 'WIP',
+        date: 'Date',
+        author: 'XPR Team',
+        icon: 'fa-city'
+    },
+    {
+        id: 2,
+        tag: 'WIP-Tag',
+        title: 'WIP',
+        excerpt: 'WIP',
+        date: 'Date',
+        author: 'XPR Team',
+        icon: 'fa-trophy'
+    },
+    {
+        id: 3,
+        tag: 'WIP-Tag',
+        title: 'WIP',
+        excerpt: '`WIP',
+        date: 'Date',
+        author: 'XPR Team',
+        icon: 'fa-code'
+    }
+];
+
+function renderBlogPosts() {
+    const grid = document.getElementById('blogGrid');
+    if (!grid) return;
+
+    grid.innerHTML = blogPosts.map(post => `
+        <div class="blog-post-card" data-aos="fade-up">
+            <div class="blog-post-image">
+                <i class="fas ${post.icon}"></i>
+            </div>
+            <div class="blog-post-content">
+                <span class="blog-post-tag">${post.tag}</span>
+                <h3 class="blog-post-title">${post.title}</h3>
+                <p class="blog-post-excerpt">${post.excerpt}</p>
+                <div class="blog-post-meta">
+                    <span><i class="fas fa-calendar-alt"></i> ${post.date}</span>
+                    <span><i class="fas fa-user"></i> ${post.author}</span>
+                </div>
+            </div>
+        </div>
+    `).join('');
+}
+
+// Chame a função quando o documento carregar
+document.addEventListener('DOMContentLoaded', renderBlogPosts);
 
 </script>
 
