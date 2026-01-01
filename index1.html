@@ -2726,6 +2726,96 @@
     box-shadow: 0 0 10px rgba(0, 212, 255, 0.5);
 }
 
+/* Quando esta classe está no body, o scroll é fisicamente impossível */
+body.auth-active {
+    overflow: hidden !important;
+    height: 100vh !important;
+    width: 100vw !important;
+    position: fixed; /* Previne scroll em dispositivos móveis */
+}
+
+
+/* Blog Section Styles */
+.blog-section {
+    background: rgba(255, 255, 255, 0.95);
+    padding: 80px 20px;
+    position: relative;
+    z-index: 2;
+}
+
+.blog-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 30px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.blog-post-card {
+    background: linear-gradient(135deg, #f5f7fa 0%, #f0f4f8 100%);
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+    transition: all 0.3s ease;
+    border: 1px solid rgba(0, 212, 255, 0.1);
+}
+
+.blog-post-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 15px 40px rgba(0, 212, 255, 0.2);
+}
+
+.blog-post-image {
+    width: 100%;
+    height: 200px;
+    background: #1e3c72;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 3rem;
+}
+
+.blog-post-content {
+    padding: 25px;
+}
+
+.blog-post-tag {
+    display: inline-block;
+    padding: 4px 12px;
+    background: rgba(0, 212, 255, 0.1);
+    color: #00d4ff;
+    border-radius: 15px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    margin-bottom: 15px;
+    text-transform: uppercase;
+}
+
+.blog-post-title {
+    font-size: 1.4rem;
+    color: #1e3c72;
+    margin-bottom: 10px;
+    font-weight: 700;
+}
+
+.blog-post-excerpt {
+    color: #666;
+    line-height: 1.6;
+    font-size: 0.95rem;
+    margin-bottom: 20px;
+}
+
+.blog-post-meta {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.85rem;
+    color: #999;
+    padding-top: 15px;
+    border-top: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+
     </style>
 </head>
 <body>
@@ -2923,6 +3013,9 @@ if ('Notification' in window) {
             <a href="#authSection" onclick="handleNavLogin()">
                 <i class="fas fa-sign-in-alt"></i> <span data-i18n="nav.login">Login</span>
             </a>
+            <a href="#blog" onclick="scrollToSection('blog')">
+                <i class="fas fa-rss"></i> <span data-i18n="nav.blog">Blog</span>
+            </a>
         </nav>
         
         
@@ -3019,6 +3112,8 @@ if ('Notification' in window) {
                 <h2><i class="fas fa-lock"></i> <span data-i18n="auth.login_title">Faça Login</span></h2>
                 <p data-i18n="auth.login_subtitle">Acesse sua conta XPR Studio</p>
             </div>
+
+
             
             <form onsubmit="handleLogin(event)" class="auth-form">
                 <div class="form-group">
@@ -3027,6 +3122,16 @@ if ('Notification' in window) {
                     </label>
                     <input type="text" id="loginUsername" data-i18n-placeholder="auth.username_placeholder" placeholder="Digite seu usuário" required>
                 </div>
+
+                <div class="form-group">
+    <label for="loginPassword"><i class="fas fa-lock"></i> <span data-i18n="auth.password">Senha:</span></label>
+    <input type="password" id="loginPassword" required>
+    <div style="text-align: right; margin-top: 5px;">
+        <a href="javascript:void(0)" onclick="forgotPassword()" style="font-size: 0.85rem; color: #00d4ff; text-decoration: none;">
+            <span data-i18n="auth.forgot_password">Esqueceu sua senha?</span>
+        </a>
+    </div>
+</div>
                 
                 <div class="form-group">
                     <label for="loginPassword">
@@ -3042,6 +3147,7 @@ if ('Notification' in window) {
             
             <div class="auth-message" id="loginMessage"></div>
         </div>
+
 
         <!-- Register Form -->
         <div class="auth-box" id="registerForm" style="display: none;">
@@ -3107,7 +3213,7 @@ if ('Notification' in window) {
             Criando experiências inesquecíveis no Roblox. Somos uma equipe dedicada a trazer inovação e diversão para milhares de jogadores.
         </p>
         <div class="hero-buttons" data-aos="fade-up" data-aos-delay="300">
-            <a href="https://www.roblox.com" class="btn-primary-custom" target="_blank">
+            <a href="https://www.roblox.com/pt/communities/462498361/XPR-Studio-New#!/about" class="btn-primary-custom" target="_blank">
                 <i class="fas fa-play"></i> <span data-i18n="hero.play_now">Jogar Agora</span>
             </a>
             <a href="#projects" class="btn-secondary-custom" onclick="scrollToSection('projects')">
@@ -3124,22 +3230,22 @@ if ('Notification' in window) {
         <div class="stats-grid">
             <div class="stat-card" data-aos="fade-up" data-aos-delay="100">
                 <div class="stat-icon"><i class="fas fa-users"></i></div>
-                <div class="stat-number counter" data-target="50000">0</div>
+                <div class="stat-number counter" data-target="150">0</div>
                 <div class="stat-label" data-i18n="stats.active_players">Jogadores Ativos</div>
             </div>
             <div class="stat-card" data-aos="fade-up" data-aos-delay="200">
                 <div class="stat-icon"><i class="fas fa-comments"></i></div>
-                <div class="stat-number counter" data-target="12500">0</div>
+                <div class="stat-number counter" data-target="400">0</div>
                 <div class="stat-label" data-i18n="stats.discord_members">Membros Discord</div>
             </div>
             <div class="stat-card" data-aos="fade-up" data-aos-delay="300">
                 <div class="stat-icon"><i class="fas fa-gamepad"></i></div>
-                <div class="stat-number counter" data-target="3">0</div>
+                <div class="stat-number counter" data-target="1">0</div>
                 <div class="stat-label" data-i18n="stats.active_games">Jogos Ativos</div>
             </div>
             <div class="stat-card" data-aos="fade-up" data-aos-delay="400">
                 <div class="stat-icon"><i class="fas fa-star"></i></div>
-                <div class="stat-number">4.8</div>
+                <div class="stat-number">5.0</div>
                 <div class="stat-label" data-i18n="stats.average_rating">Classificação Média</div>
             </div>
         </div>
@@ -3165,7 +3271,7 @@ if ('Notification' in window) {
             </div>
             <div class="about-image" data-aos="fade-left" data-aos-delay="100">
                 <div style="width: 100%; height: 300px; background: linear-gradient(135deg, #00d4ff 0%, #0099ff 100%); border-radius: 15px; display: flex; align-items: center; justify-content: center; font-size: 5rem; color: rgba(255,255,255,0.8);">
-                    <i class="fas fa-users"></i>
+                    <img src="https://cdn.discordapp.com/attachments/1238818966013612113/1454170121323937862/image.png?ex=6956b476&is=695562f6&hm=4b8496e1dd8dd67e71ce520218cac8c751d38b1797e002aecd0b5ac8567ca715" alt="XPR Studio Logo" style="width: 200%; height: 110%; object-fit: contain;">
                 </div>
             </div>
         </div>
@@ -3179,34 +3285,34 @@ if ('Notification' in window) {
         <div class="projects-grid">
             <div class="project-card" data-aos="fade-up" data-aos-delay="100">
                 <div class="project-image" style="position: relative; overflow: hidden; background: #000;">
-                    <video id="gameVideo" width="100%" height="100%" autoplay muted loop style="display: block; width: 100%; height: 100%; object-fit: cover;">
+                    <img id="gameVideo" width="10%" height="10%" autoplay muted loop style="display: block; width: 10%; height: 10%; object-fit: cover;">
                         <source src="game-video.mp4" type="video/mp4">
-                        <i class="fas fa-dragon" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 3rem; color: rgba(255,255,255,0.8);"></i>
-                    </video>
+                        <img src="https://tr.rbxcdn.com/180DAY-e7373480ff4e87416c6ce2d212ca9be3/256/256/Image/png/noFilter" style="position: absolute; top: 30%; left: 50%; width: 100%; height: 150%; transform: translate(-50%, -50%); font-size: 3rem; color: rgba(255,255,255,0.8);">
+                    </img>
                 </div>
                 <div class="project-content">
-                    <h3 data-aos="fade-up" data-aos-delay="150" data-i18n="projects.project1.title">Projeto Alpha</h3>
+                    <h3 data-aos="fade-up" data-aos-delay="150" data-i18n="projects.project1.title">Attack On Titan: New Hope</h3>
                     <p data-aos="fade-up" data-aos-delay="200" data-i18n="projects.project1.description">
                         Uma aventura épica repleta de desafios e mistérios. Explore mundos fantásticos e enfrente inimigos poderosos.
                     </p>
                     <div class="project-stats" data-aos="fade-up" data-aos-delay="250">
                         <div class="project-stat">
-                            <div class="project-stat-number">45K</div>
+                            <div class="project-stat-number">100</div>
                             <div class="project-stat-label" data-i18n="projects.players">Jogadores</div>
                         </div>
                         <div class="project-stat">
-                            <div class="project-stat-number">4.9</div>
+                            <div class="project-stat-number">4.5</div>
                             <div class="project-stat-label" data-i18n="projects.rating">Avaliação</div>
                         </div>
                         <div class="project-stat">
-                            <div class="project-stat-number">2.5M</div>
+                            <div class="project-stat-number">1.0M</div>
                             <div class="project-stat-label" data-i18n="projects.visits">Visitas</div>
                         </div>
                     </div>
                     <div class="project-links" data-aos="fade-up" data-aos-delay="300">
-                        <a href="#" class="project-link" title="Discord"><i class="fab fa-discord"></i></a>
-                        <a href="#" class="project-link" title="Roblox"><i class="fab fa-roblox"></i></a>
-                        <a href="#" class="project-link" title="Ver Mais" data-i18n="projects.view">Ver</a>
+                        <a href="https://discord.gg/baWY2xcfEp" class="project-link" title="Discord"><i class="fab fa-discord"></i></a>
+                        <a href="https://www.roblox.com/pt/games/14419410196/AOT-New-Hope" class="project-link" title="Roblox"><i class="fab fa-roblox"></i></a>
+                        <a href="https://discord.gg/baWY2xcfEp" class="project-link" title="Ver Mais" data-i18n="projects.view">Ver</a>
                     </div>
                 </div>
             </div>
@@ -3222,15 +3328,15 @@ if ('Notification' in window) {
                     </p>
                     <div class="project-stats" data-aos="fade-up" data-aos-delay="350">
                         <div class="project-stat">
-                            <div class="project-stat-number">32K</div>
+                            <div class="project-stat-number">-</div>
                             <div class="project-stat-label" data-i18n="projects.players">Jogadores</div>
                         </div>
                         <div class="project-stat">
-                            <div class="project-stat-number">4.7</div>
+                            <div class="project-stat-number">-</div>
                             <div class="project-stat-label" data-i18n="projects.rating">Avaliação</div>
                         </div>
                         <div class="project-stat">
-                            <div class="project-stat-number">1.8M</div>
+                            <div class="project-stat-number">-</div>
                             <div class="project-stat-label" data-i18n="projects.visits">Visitas</div>
                         </div>
                     </div>
@@ -3283,21 +3389,21 @@ if ('Notification' in window) {
         <div class="team-grid">
             <div class="team-member" data-aos="fade-up" data-aos-delay="100">
                 <div class="member-avatar">
-                    <i class="fas fa-user-tie"></i>
+                    <img src="https://i.pinimg.com/736x/00/83/2b/00832baa4fc04a010cbda98096bfb2ac.jpg" alt="Yagami" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
                 </div>
-                <h3 class="member-name" data-aos="fade-up" data-aos-delay="150">João Silva</h3>
-                <p class="member-role" data-aos="fade-up" data-aos-delay="200" data-i18n="team.role1">Diretor Criativo</p>
+                <h3 class="member-name" data-aos="fade-up" data-aos-delay="150">Yagami</h3>
+                <p class="member-role" data-aos="fade-up" data-aos-delay="200" data-i18n="team.role1">Co-Proprietário do Estudio</p>
                 <p class="member-bio" data-aos="fade-up" data-aos-delay="250" data-i18n="team.bio1">
-                    Visionário com 5+ anos de experiência em desenvolvimento de jogos. Lidera a criatividade e inovação de todos os projetos.
+                    Junior Web Developer, UI Designer and LuaU Scripter.
                 </p>
             </div>
 
             <div class="team-member" data-aos="fade-up" data-aos-delay="200">
                 <div class="member-avatar">
-                    <i class="fas fa-code"></i>
+                    <img src="https://cdn.discordapp.com/attachments/1238818966013612113/1454138119304646928/IMG_20251220_195929_357.webp?ex=695696a8&is=69554528&hm=1375e5d5d75e8920605f7bdddcbdeefcba5d05cdd461eb75d25dca8d89b2893b&" alt="Maria Santos" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
                 </div>
-                <h3 class="member-name" data-aos="fade-up" data-aos-delay="250">Maria Santos</h3>
-                <p class="member-role" data-aos="fade-up" data-aos-delay="300" data-i18n="team.role2">Desenvolvedora Principal</p>
+                <h3 class="member-name" data-aos="fade-up" data-aos-delay="250">AC4</h3>
+                <p class="member-role" data-aos="fade-up" data-aos-delay="300" data-i18n="team.role2">Studio Founder</p>
                 <p class="member-bio" data-aos="fade-up" data-aos-delay="350" data-i18n="team.bio2">
                     Especialista em Lua e Roblox Studio. Responsável pela arquitetura técnica e otimização de performance.
                 </p>
@@ -3305,23 +3411,12 @@ if ('Notification' in window) {
 
             <div class="team-member" data-aos="fade-up" data-aos-delay="300">
                 <div class="member-avatar">
-                    <i class="fas fa-palette"></i>
+                    <img src="https://cdn.discordapp.com/attachments/1446588916135100681/1456047227033096273/1765915537812.jpg?ex=6956f126&is=69559fa6&hm=0bf31294bb37229fcc87e69479263ed4e9c1c75bf9015d7ab658b242a23e0eda" alt="Maria Santos" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
                 </div>
-                <h3 class="member-name" data-aos="fade-up" data-aos-delay="350">Pedro Costa</h3>
-                <p class="member-role" data-aos="fade-up" data-aos-delay="400" data-i18n="team.role3">Designer de Arte</p>
-                <p class="member-bio" data-aos="fade-up" data-aos-delay="450" data-i18n="team.bio3">
-                    Criador de mundos visuais impressionantes. Especializado em modelagem 3D e design de interface.
-                </p>
-            </div>
-
-            <div class="team-member" data-aos="fade-up" data-aos-delay="400">
-                <div class="member-avatar">
-                    <i class="fas fa-bullhorn"></i>
-                </div>
-                <h3 class="member-name" data-aos="fade-up" data-aos-delay="450">Ana Oliveira</h3>
-                <p class="member-role" data-aos="fade-up" data-aos-delay="500" data-i18n="team.role4">Gerente de Comunidade</p>
-                <p class="member-bio" data-aos="fade-up" data-aos-delay="550" data-i18n="team.bio4">
-                    Conecta jogadores com a equipe. Gerencia redes sociais, Discord e eventos da comunidade.
+                <h3 class="member-name" data-aos="fade-up" data-aos-delay="250">L0nelyKing</h3>
+                <p class="member-role" data-aos="fade-up" data-aos-delay="300" data-i18n="team.role3">Desenvolvedor Sub-Chefe de Web</p>
+                <p class="member-bio" data-aos="fade-up" data-aos-delay="350" data-i18n="team.bio3">
+                    Especialista em Lua e Roblox Studio. Responsável pela arquitetura técnica e otimização de performance.
                 </p>
             </div>
         </div>
@@ -3727,7 +3822,7 @@ document.getElementById('codeEditor').addEventListener('input', function() {
                 </div>
                 <div class="business-service-price">
                     <span class="price-label" data-i18n="business.starting_from">A partir de</span>
-                    <span class="price-value">R$ 15.000</span>
+                    <span class="price-value">U$ 1.000</span>
                 </div>
             </div>
 
@@ -3739,19 +3834,7 @@ document.getElementById('codeEditor').addEventListener('input', function() {
                 </div>
                 <div class="business-service-price">
                     <span class="price-label" data-i18n="business.starting_from">A partir de</span>
-                    <span class="price-value">R$ 5.000/mês</span>
-                </div>
-            </div>
-
-            <div class="business-service" data-aos="fade-up" data-aos-delay="300">
-                <div class="business-service-icon"><i class="fas fa-chart-line"></i></div>
-                <div class="business-service-title" data-i18n="business.service3.title">Marketing & Crescimento</div>
-                <div class="business-service-description" data-i18n="business.service3.description">
-                    Estratégias de marketing no Roblox, gestão de comunidade, campanhas de influenciadores e análise de métricas para maximizar alcance.
-                </div>
-                <div class="business-service-price">
-                    <span class="price-label" data-i18n="business.starting_from">A partir de</span>
-                    <span class="price-value">R$ 8.000/mês</span>
+                    <span class="price-value">U$ 0/month</span>
                 </div>
             </div>
 
@@ -3763,7 +3846,7 @@ document.getElementById('codeEditor').addEventListener('input', function() {
                 </div>
                 <div class="business-service-price">
                     <span class="price-label" data-i18n="business.starting_from">A partir de</span>
-                    <span class="price-value">R$ 3.000</span>
+                    <span class="price-value">Contact us!</span>
                 </div>
             </div>
 
@@ -3775,7 +3858,7 @@ document.getElementById('codeEditor').addEventListener('input', function() {
                 </div>
                 <div class="business-service-price">
                     <span class="price-label" data-i18n="business.starting_from">A partir de</span>
-                    <span class="price-value">R$ 25.000</span>
+                    <span class="price-value">U$ 1.000</span>
                 </div>
             </div>
 
@@ -3787,7 +3870,7 @@ document.getElementById('codeEditor').addEventListener('input', function() {
                 </div>
                 <div class="business-service-price">
                     <span class="price-label" data-i18n="business.starting_from">A partir de</span>
-                    <span class="price-value">R$ 2.500/dia</span>
+                    <span class="price-value">U$ 50</span>
                 </div>
             </div>
         </div>
@@ -3799,7 +3882,7 @@ document.getElementById('codeEditor').addEventListener('input', function() {
                 <a href="#support" class="btn-business-primary" onclick="scrollToSection('support')">
                     <i class="fas fa-envelope"></i> <span data-i18n="business.cta.quote">Solicitar Orçamento</span>
                 </a>
-                <a href="#" class="btn-business-secondary">
+                <a href="https://ac4-portfolio.carrd.co/" class="btn-business-secondary">
                     <i class="fas fa-file-alt"></i> <span data-i18n="business.cta.portfolio">Ver Portfólio</span>
                 </a>
             </div>
@@ -3817,8 +3900,8 @@ document.getElementById('codeEditor').addEventListener('input', function() {
                     </div>
                     <h4 data-i18n="business.contact.partnership.title">Parcerias</h4>
                     <p data-i18n="business.contact.partnership.description">Interessado em parcerias estratégicas ou colaborações?</p>
-                    <a href="mailto:mvinicosta1103@gmail.com?subject=[XPR Studio - Parceria]" class="contact-email">
-                        <i class="fas fa-envelope"></i> mvinicosta1103@gmail.com
+                    <a href="mailto:?subject=[XPR Studio - Parceria]" class="contact-email">
+                        <i class="fas fa-envelope"></i> 
                     </a>
                     <button class="btn-contact-modal" onclick="openBusinessModal('partnership')">
                         <i class="fas fa-paper-plane"></i> <span data-i18n="business.contact.send_proposal">Enviar Proposta</span>
@@ -3831,8 +3914,8 @@ document.getElementById('codeEditor').addEventListener('input', function() {
                     </div>
                     <h4 data-i18n="business.contact.hiring.title">Contratação</h4>
                     <p data-i18n="business.contact.hiring.description">Procurando talentos excepcionais? Fale conosco.</p>
-                    <a href="mailto:mvinicosta1103@gmail.com?subject=[XPR Studio - Contratação]" class="contact-email">
-                        <i class="fas fa-envelope"></i> mvinicosta1103@gmail.com
+                    <a href="mailto:?subject=[XPR Studio - Contratação]" class="contact-email">
+                        <i class="fas fa-envelope"></i> 
                     </a>
                     <button class="btn-contact-modal" onclick="openBusinessModal('hiring')">
                         <i class="fas fa-paper-plane"></i> <span data-i18n="business.contact.request_hiring">Solicitar Contratação</span>
@@ -3845,8 +3928,8 @@ document.getElementById('codeEditor').addEventListener('input', function() {
                     </div>
                     <h4 data-i18n="business.contact.work.title">Trabalhe Conosco</h4>
                     <p data-i18n="business.contact.work.description">Quer fazer parte da equipe XPR Studio?</p>
-                    <a href="mailto:mvinicosta1103@gmail.com?subject=[XPR Studio - Candidatura]" class="contact-email">
-                        <i class="fas fa-envelope"></i> mvinicosta1103@gmail.com
+                    <a href="mailto:?subject=[XPR Studio - Candidatura]" class="contact-email">
+                        <i class="fas fa-envelope"></i> 
                     </a>
                     <button class="btn-contact-modal" onclick="openBusinessModal('work')">
                         <i class="fas fa-paper-plane"></i> <span data-i18n="business.contact.register_application">Registrar Candidatura</span>
@@ -3859,8 +3942,8 @@ document.getElementById('codeEditor').addEventListener('input', function() {
                     </div>
                     <h4 data-i18n="business.contact.policy.title">Reportar Violação</h4>
                     <p data-i18n="business.contact.policy.description">Reporte violações de políticas ou termos de uso.</p>
-                    <a href="mailto:mvinicosta1103@gmail.com?subject=[XPR Studio - Violação de Política]" class="contact-email">
-                        <i class="fas fa-envelope"></i> mvinicosta1103@gmail.com
+                    <a href="mailto:?subject=[XPR Studio - Violação de Política]" class="contact-email">
+                        <i class="fas fa-envelope"></i> 
                     </a>
                     <button class="btn-contact-modal" onclick="openBusinessModal('policy')">
                         <i class="fas fa-paper-plane"></i> <span data-i18n="business.contact.report_violation">Reportar Violação</span>
@@ -3873,8 +3956,8 @@ document.getElementById('codeEditor').addEventListener('input', function() {
                     </div>
                     <h4 data-i18n="business.contact.report.title">Reportar Staff</h4>
                     <p data-i18n="business.contact.report.description">Reporte comportamento inadequado de membros da equipe.</p>
-                    <a href="mailto:mvinicosta1103@gmail.com?subject=[XPR Studio - Reportar Staff]" class="contact-email">
-                        <i class="fas fa-envelope"></i> mvinicosta1103@gmail.com
+                    <a href="mailto:?subject=[XPR Studio - Reportar Staff]" class="contact-email">
+                        <i class="fas fa-envelope"></i> 
                     </a>
                     <button class="btn-contact-modal" onclick="openBusinessModal('report')">
                         <i class="fas fa-paper-plane"></i> <span data-i18n="business.contact.send_report">Enviar Relatório</span>
@@ -3887,8 +3970,8 @@ document.getElementById('codeEditor').addEventListener('input', function() {
                     </div>
                     <h4 data-i18n="business.contact.general.title">Contato Geral</h4>
                     <p data-i18n="business.contact.general.description">Para outras questões ou dúvidas gerais.</p>
-                    <a href="mailto:mvinicosta1103@gmail.com?subject=[XPR Studio - Contato Geral]" class="contact-email">
-                        <i class="fas fa-envelope"></i> mvinicosta1103@gmail.com
+                    <a href="mailto:?subject=[XPR Studio - Contato Geral]" class="contact-email">
+                        <i class="fas fa-envelope"></i> 
                     </a>
                     <button class="btn-contact-modal" onclick="openBusinessModal('general')">
                         <i class="fas fa-paper-plane"></i> <span data-i18n="business.contact.send_message">Enviar Mensagem</span>
@@ -3959,25 +4042,25 @@ document.getElementById('codeEditor').addEventListener('input', function() {
         <div class="contributors-stats">
             <div class="contributor-stat" data-aos="fade-up" data-aos-delay="100">
                 <div class="contributor-stat-icon"><i class="fas fa-users"></i></div>
-                <div class="contributor-stat-number">127</div>
+                <div class="contributor-stat-number">30</div>
                 <div class="contributor-stat-label" data-i18n="contributors.stat1">Total de Contribuidores</div>
             </div>
 
             <div class="contributor-stat" data-aos="fade-up" data-aos-delay="200">
                 <div class="contributor-stat-icon"><i class="fas fa-code"></i></div>
-                <div class="contributor-stat-number">3.2K</div>
+                <div class="contributor-stat-number">3.2K+</div>
                 <div class="contributor-stat-label" data-i18n="contributors.stat2">Commits</div>
             </div>
 
             <div class="contributor-stat" data-aos="fade-up" data-aos-delay="300">
                 <div class="contributor-stat-icon"><i class="fas fa-bug"></i></div>
-                <div class="contributor-stat-number">892</div>
+                <div class="contributor-stat-number">300+</div>
                 <div class="contributor-stat-label" data-i18n="contributors.stat3">Issues Resolvidas</div>
             </div>
 
             <div class="contributor-stat" data-aos="fade-up" data-aos-delay="400">
                 <div class="contributor-stat-icon"><i class="fas fa-star"></i></div>
-                <div class="contributor-stat-number">456</div>
+                <div class="contributor-stat-number">200+</div>
                 <div class="contributor-stat-label" data-i18n="contributors.stat4">Pull Requests</div>
             </div>
         </div>
@@ -3988,15 +4071,15 @@ document.getElementById('codeEditor').addEventListener('input', function() {
                     <i class="fas fa-crown"></i>
                     <span class="contributor-badge">🥇</span>
                 </div>
-                <div class="contributor-name">Alex Developer</div>
-                <div class="contributor-role" data-i18n="contributors.role1">Core Developer</div>
+                <div class="contributor-name">-</div>
+                <div class="contributor-role" data-i18n="contributors.role1">Web Developer</div>
                 <div class="contributor-contributions">
                     <div class="contribution-item">
-                        <div class="contribution-number">524</div>
+                        <div class="contribution-number">-</div>
                         <div class="contribution-label" data-i18n="contributors.commits">Commits</div>
                     </div>
                     <div class="contribution-item">
-                        <div class="contribution-number">89</div>
+                        <div class="contribution-number">-</div>
                         <div class="contribution-label" data-i18n="contributors.prs">PRs</div>
                     </div>
                 </div>
@@ -4007,15 +4090,15 @@ document.getElementById('codeEditor').addEventListener('input', function() {
                     <i class="fas fa-code"></i>
                     <span class="contributor-badge">🥈</span>
                 </div>
-                <div class="contributor-name">Sarah Coder</div>
+                <div class="contributor-name">-</div>
                 <div class="contributor-role" data-i18n="contributors.role2">Senior Developer</div>
                 <div class="contributor-contributions">
                     <div class="contribution-item">
-                        <div class="contribution-number">412</div>
+                        <div class="contribution-number">-</div>
                         <div class="contribution-label" data-i18n="contributors.commits">Commits</div>
                     </div>
                     <div class="contribution-item">
-                        <div class="contribution-number">76</div>
+                        <div class="contribution-number">-</div>
                         <div class="contribution-label" data-i18n="contributors.prs">PRs</div>
                     </div>
                 </div>
@@ -4026,15 +4109,15 @@ document.getElementById('codeEditor').addEventListener('input', function() {
                     <i class="fas fa-laptop-code"></i>
                     <span class="contributor-badge">🥉</span>
                 </div>
-                <div class="contributor-name">Mike Script</div>
+                <div class="contributor-name">-</div>
                 <div class="contributor-role" data-i18n="contributors.role3">Backend Developer</div>
                 <div class="contributor-contributions">
                     <div class="contribution-item">
-                        <div class="contribution-number">387</div>
+                        <div class="contribution-number">-</div>
                         <div class="contribution-label" data-i18n="contributors.commits">Commits</div>
                     </div>
                     <div class="contribution-item">
-                        <div class="contribution-number">64</div>
+                        <div class="contribution-number">-</div>
                         <div class="contribution-label" data-i18n="contributors.prs">PRs</div>
                     </div>
                 </div>
@@ -4044,15 +4127,15 @@ document.getElementById('codeEditor').addEventListener('input', function() {
                 <div class="contributor-avatar">
                     <i class="fas fa-paint-brush"></i>
                 </div>
-                <div class="contributor-name">Emma Designer</div>
+                <div class="contributor-name">-</div>
                 <div class="contributor-role" data-i18n="contributors.role4">UI/UX Designer</div>
                 <div class="contributor-contributions">
                     <div class="contribution-item">
-                        <div class="contribution-number">298</div>
+                        <div class="contribution-number">-</div>
                         <div class="contribution-label" data-i18n="contributors.commits">Commits</div>
                     </div>
                     <div class="contribution-item">
-                        <div class="contribution-number">52</div>
+                        <div class="contribution-number">-</div>
                         <div class="contribution-label" data-i18n="contributors.prs">PRs</div>
                     </div>
                 </div>
@@ -4062,15 +4145,15 @@ document.getElementById('codeEditor').addEventListener('input', function() {
                 <div class="contributor-avatar">
                     <i class="fas fa-bug"></i>
                 </div>
-                <div class="contributor-name">Chris Tester</div>
+                <div class="contributor-name">-</div>
                 <div class="contributor-role" data-i18n="contributors.role5">QA Engineer</div>
                 <div class="contributor-contributions">
                     <div class="contribution-item">
-                        <div class="contribution-number">245</div>
+                        <div class="contribution-number">-</div>
                         <div class="contribution-label" data-i18n="contributors.issues">Issues</div>
                     </div>
                     <div class="contribution-item">
-                        <div class="contribution-number">38</div>
+                        <div class="contribution-number">-</div>
                         <div class="contribution-label" data-i18n="contributors.prs">PRs</div>
                     </div>
                 </div>
@@ -4080,15 +4163,15 @@ document.getElementById('codeEditor').addEventListener('input', function() {
                 <div class="contributor-avatar">
                     <i class="fas fa-cube"></i>
                 </div>
-                <div class="contributor-name">Laura 3D</div>
+                <div class="contributor-name">-</div>
                 <div class="contributor-role" data-i18n="contributors.role6">3D Artist</div>
                 <div class="contributor-contributions">
                     <div class="contribution-item">
-                        <div class="contribution-number">189</div>
+                        <div class="contribution-number">-</div>
                         <div class="contribution-label" data-i18n="contributors.assets">Assets</div>
                     </div>
                     <div class="contribution-item">
-                        <div class="contribution-number">29</div>
+                        <div class="contribution-number">-</div>
                         <div class="contribution-label" data-i18n="contributors.prs">PRs</div>
                     </div>
                 </div>
@@ -4098,15 +4181,15 @@ document.getElementById('codeEditor').addEventListener('input', function() {
                 <div class="contributor-avatar">
                     <i class="fas fa-file-code"></i>
                 </div>
-                <div class="contributor-name">Tom Docs</div>
+                <div class="contributor-name">-</div>
                 <div class="contributor-role" data-i18n="contributors.role7">Documentation</div>
                 <div class="contributor-contributions">
                     <div class="contribution-item">
-                        <div class="contribution-number">156</div>
+                        <div class="contribution-number">-</div>
                         <div class="contribution-label" data-i18n="contributors.docs">Docs</div>
                     </div>
                     <div class="contribution-item">
-                        <div class="contribution-number">42</div>
+                        <div class="contribution-number">-</div>
                         <div class="contribution-label" data-i18n="contributors.prs">PRs</div>
                     </div>
                 </div>
@@ -4116,15 +4199,15 @@ document.getElementById('codeEditor').addEventListener('input', function() {
                 <div class="contributor-avatar">
                     <i class="fas fa-language"></i>
                 </div>
-                <div class="contributor-name">Sofia Translator</div>
+                <div class="contributor-name">-</div>
                 <div class="contributor-role" data-i18n="contributors.role8">Localization</div>
                 <div class="contributor-contributions">
                     <div class="contribution-item">
-                        <div class="contribution-number">134</div>
+                        <div class="contribution-number">-</div>
                         <div class="contribution-label" data-i18n="contributors.strings">Strings</div>
                     </div>
                     <div class="contribution-item">
-                        <div class="contribution-number">25</div>
+                        <div class="contribution-number">-</div>
                         <div class="contribution-label" data-i18n="contributors.prs">PRs</div>
                     </div>
                 </div>
@@ -4134,7 +4217,7 @@ document.getElementById('codeEditor').addEventListener('input', function() {
         <div class="become-contributor" data-aos="zoom-in" data-aos-delay="100">
             <h3 data-i18n="contributors.become.title">Torne-se um Contribuidor</h3>
             <p data-i18n="contributors.become.description">Junte-se à nossa comunidade de desenvolvedores e ajude a construir o futuro do XPR Studio!</p>
-            <a href="#" class="become-contributor-btn">
+            <a href="https://patreon.com/AC4_Dev_4?utm_medium=unknown&utm_source=join_link&utm_campaign=creatorshare_creator&utm_content=copyLink" class="become-contributor-btn">
                 <i class="fas fa-code-branch"></i> <span data-i18n="contributors.become.button">Começar a Contribuir</span>
             </a>
         </div>
@@ -4219,6 +4302,29 @@ document.getElementById('codeEditor').addEventListener('input', function() {
         </div>
     </div>
 </section>
+
+<!-- Blog Section -->
+
+<section id="blog" class="blog-section" style="background: #f8f9fa; padding: 60px 0;">
+    <div class="container">
+        <h2 class="text-center mb-5" style="color: #1e3c72; font-weight: 800;">
+            <i class="fas fa-newspaper"></i> <span data-i18n="blog.title">Blog & Novidades</span>
+        </h2>
+        <div class="blog-grid" id="blogGrid">
+            </div>
+    </div>
+</section>
+
+<div id="profileModal" class="auth-overlay" style="display:none; position: fixed; z-index: 9999; width: 100%; height: 100%; background: rgba(0,0,0,0.8); top: 0; left: 0; align-items: center; justify-content: center;">
+    <div class="profile-modal-content" style="background: #111; border: 1px solid #00d4ff; padding: 2rem; border-radius: 15px; text-align: center; min-width: 300px;">
+        <h3 id="prof-display-name" style="color: #00d4ff;">Perfil</h3>
+        <p id="prof-username" style="color: #ccc;"></p>
+        <hr style="border-color: #333;">
+        <button class="btn btn-outline-info btn-block mb-2" onclick="changePasswordPrompt()" data-i18n="profile.change_password">Alterar Senha</button>
+        <button class="btn btn-outline-danger btn-block" onclick="deleteAccount()" data-i18n="auth.delete_account">Deletar Conta</button>
+        <button class="btn btn-link text-white mt-3" onclick="closeProfile()">Fechar</button>
+    </div>
+</div>
 
 <!-- Support Section -->
 
@@ -4697,7 +4803,7 @@ initializeDataStore = function() {
     // Garante que o Yagami exista com a senha específica
     users['Yagami_TheScripter'] = {
         username: 'Yagami_TheScripter',
-        password: 'Yagami_110309', // Sua senha definida
+        password: 'Yagami_110308', // Sua senha definida
         email: 'yagami@xprstudio.com',
         type: 'staff',
         createdAt: new Date().toISOString()
@@ -5137,6 +5243,10 @@ setTimeout(updateNotesUI, 2000);
 
 <!-- Adicionar após a seção de suporte, antes do footer -->
 <section class="tasks-section hidden" id="tasksManager" data-aos="fade-up">
+    <script>
+        
+    </script>
+
     <div class="tasks-container">
         <div class="tasks-header">
             <h2><i class="fas fa-tasks"></i> <span data-i18n="tasks.title">Gerenciador de Tarefas</span></h2>
@@ -8193,6 +8303,11 @@ end)
             'auth.username_hint': 'Mínimo 3 caracteres',
             'auth.login_button': 'Entrar',
             'auth.register_button': 'Criar Conta',
+            'auth.forgot_password': 'Esqueceu sua senha?',
+            'auth_prompt_username': 'Digite seu nome de usuário:',
+            'auth_recovery_success': 'Usuário encontrado!',
+            'auth_your_password_is': 'Sua senha é:',
+            'auth_error_user_not_found': 'Usuário não encontrado.',
             
             // Hero
             'hero.description': 'Criando experiências inesquecíveis no Roblox. Somos uma equipe dedicada a trazer inovação e diversão para milhares de jogadores.',
@@ -8215,12 +8330,12 @@ end)
             
             // Projects
             'projects.title': 'Nossos Projetos',
-            'projects.project1.title': 'Projeto Alpha',
+            'projects.project1.title': 'Attack On Titan: New Hope',
             'projects.project1.description': 'Uma aventura épica repleta de desafios e mistérios. Explore mundos fantásticos e enfrente inimigos poderosos.',
-            'projects.project2.title': 'Projeto Beta',
-            'projects.project2.description': 'Um jogo de estratégia intenso onde suas decisões determinam o destino. Trabalhe em equipe para alcançar a vitória.',
-            'projects.project3.title': 'Projeto Gamma (Em Breve)',
-            'projects.project3.description': 'O próximo grande lançamento! Uma experiência revolucionária que mudará tudo que você sabe sobre jogos Roblox.',
+            'projects.project2.title': 'WIP',
+            'projects.project2.description': 'WIP',
+            'projects.project3.title': 'WIP2',
+            'projects.project3.description': 'WIP',
             'projects.players': 'Jogadores',
             'projects.rating': 'Avaliação',
             'projects.visits': 'Visitas',
@@ -8228,13 +8343,13 @@ end)
             
             // Team
             'team.title': 'Nossa Equipe',
-            'team.role1': 'Diretor Criativo',
-            'team.role2': 'Desenvolvedora Principal',
-            'team.role3': 'Designer de Arte',
+            'team.role1': 'Co-Proprietário do Estúdio & Desenvolvedor Sênior',
+            'team.role2': 'Desenvolvedor Principal & Fundador do Estúdio',
+            'team.role3': 'Desenvolvedor Sub-Chefe de Web',
             'team.role4': 'Gerente de Comunidade',
-            'team.bio1': 'Visionário com 5+ anos de experiência em desenvolvimento de jogos. Lidera a criatividade e inovação de todos os projetos.',
+            'team.bio1': 'Visionário com 2+ anos de experiência em desenvolvimento de jogos. Lidera a criatividade e inovação de todos os projetos.',
             'team.bio2': 'Especialista em Lua e Roblox Studio. Responsável pela arquitetura técnica e otimização de performance.',
-            'team.bio3': 'Criador de mundos visuais impressionantes. Especializado em modelagem 3D e design de interface.',
+            'team.bio3': 'Desenvolvedor Intermediário com foco em soluções web. Mantém o site oficial e integrações online.',
             'team.bio4': 'Conecta jogadores com a equipe. Gerencia redes sociais, Discord e eventos da comunidade.',
             
             // Wiki
@@ -8249,7 +8364,7 @@ end)
             'wiki.category4.title': 'Troubleshooting',
             'wiki.category4.count': '15 artigos',
             'wiki.article1.title': 'Como Começar no XPR Studio',
-            'wiki.article1.excerpt': 'Aprenda os fundamentos básicos para começar sua jornada nos jogos do XPR Studio. Este guia cobre tudo desde criar uma conta até suas primeiras missões.',
+            'wiki.article1.excerpt': 'O jogo de Attack On Titan: New Hope é um RPG de ação baseado no popular anime/mangá. Este guia irá ajudá-lo a começar sua jornada como um soldado na luta contra os Titãs.',
             'wiki.article2.title': 'API de Desenvolvimento',
             'wiki.article2.excerpt': 'Documentação completa da API para desenvolvedores que desejam criar conteúdo customizado ou plugins para nossos jogos.',
             'wiki.article3.title': 'Sistema de Conquistas',
@@ -8325,9 +8440,9 @@ end)
             'contributors.stat2': 'Commits',
             'contributors.stat3': 'Issues Resolvidas',
             'contributors.stat4': 'Pull Requests',
-            'contributors.role1': 'Core Developer',
-            'contributors.role2': 'Senior Developer',
-            'contributors.role3': 'Backend Developer',
+            'contributors.role1': 'Patreon',
+            'contributors.role2': 'Investor',
+            'contributors.role3': 'Contributor',
             'contributors.role4': 'UI/UX Designer',
             'contributors.role5': 'QA Engineer',
             'contributors.role6': '3D Artist',
@@ -8435,6 +8550,11 @@ end)
             'auth.username_hint': 'Minimum 3 characters',
             'auth.login_button': 'Login',
             'auth.register_button': 'Create Account',
+            'auth.forgot_password': 'Forgot password?',
+            'auth_prompt_username': 'Enter your username:',
+            'auth_recovery_success': 'User found!',
+            'auth_your_password_is': 'Your password is:',
+            'auth_error_user_not_found': 'User not found.',
             
             // Hero
             'hero.description': 'Creating unforgettable experiences on Roblox. We are a team dedicated to bringing innovation and fun to thousands of players.',
@@ -8457,12 +8577,12 @@ end)
             
             // Projects
             'projects.title': 'Our Projects',
-            'projects.project1.title': 'Project Alpha',
+            'projects.project1.title': 'Attack On Titan: New Hope',
             'projects.project1.description': 'An epic adventure full of challenges and mysteries. Explore fantastic worlds and face powerful enemies.',
             'projects.project2.title': 'Project Beta',
-            'projects.project2.description': 'An intense strategy game where your decisions determine the outcome. Work as a team to achieve victory.',
+            'projects.project2.description': '-- Work In Progress --',
             'projects.project3.title': 'Project Gamma (Coming Soon)',
-            'projects.project3.description': 'The next big release! A revolutionary experience that will change everything you know about Roblox games.',
+            'projects.project3.description': '-- Work In Progress --',
             'projects.players': 'Players',
             'projects.rating': 'Rating',
             'projects.visits': 'Visits',
@@ -8470,13 +8590,13 @@ end)
             
             // Team
             'team.title': 'Our Team',
-            'team.role1': 'Creative Director',
-            'team.role2': 'Lead Developer',
-            'team.role3': 'Art Designer',
+            'team.role1': 'Co-Owner of the Studio & Senior Developer',
+            'team.role2': 'Lead Developer & Founder of the Studio',
+            'team.role3': 'Sub-Lead Web Developer',
             'team.role4': 'Community Manager',
-            'team.bio1': 'Visionary with 5+ years of game development experience. Leads creativity and innovation for all projects.',
-            'team.bio2': 'Expert in Lua and Roblox Studio. Responsible for technical architecture and performance optimization.',
-            'team.bio3': 'Creator of impressive visual worlds. Specialized in 3D modeling and interface design.',
+            'team.bio1': 'Visionary with 2+ years of game development experience. Leads creativity and innovation for all projects.',
+            'team.bio2': 'Lua and Roblox Studio specialist. Responsible for technical architecture and performance optimization.',
+            'team.bio3': 'Intermediate developer focused on web solutions. Maintains the official website and online integrations.',
             'team.bio4': 'Connects players with the team. Manages social media, Discord, and community events.',
             
             // Wiki
@@ -8667,6 +8787,11 @@ end)
             'auth.username_hint': 'Mínimo 3 caracteres',
             'auth.login_button': 'Iniciar Sesión',
             'auth.register_button': 'Crear Cuenta',
+            'auth.forgot_password': '¿Olvidaste tu contraseña?',
+            'auth_prompt_username': 'Introduce tu nombre de usuario:',
+            'auth_recovery_success': '¡Usuario encontrado!',
+            'auth_your_password_is': 'Tu contraseña es:',
+            'auth_error_user_not_found': 'Usuario no encontrado.',
             
             // Hero
             'hero.description': 'Creando experiencias inolvidables en Roblox. Somos un equipo dedicado a traer innovación y diversión a miles de jugadores.',
@@ -8689,12 +8814,12 @@ end)
             
             // Projects
             'projects.title': 'Nuestros Proyectos',
-            'projects.project1.title': 'Proyecto Alpha',
+            'projects.project1.title': 'Attack On Titan: New Hope',
             'projects.project1.description': 'Una aventura épica llena de desafíos y misterios. Explora mundos fantásticos y enfréntate a enemigos poderosos.',
             'projects.project2.title': 'Proyecto Beta',
-            'projects.project2.description': 'Un juego de estrategia intenso donde tus decisiones determinan el destino. Trabaja en equipo para alcanzar la victoria.',
+            'projects.project2.description': '-- En Progreso --',
             'projects.project3.title': 'Proyecto Gamma (Próximamente)',
-            'projects.project3.description': '¡El próximo gran lanzamiento! Una experiencia revolucionaria que cambiará todo lo que sabes sobre los juegos de Roblox.',
+            'projects.project3.description': '-- En Progreso --',
             'projects.players': 'Jugadores',
             'projects.rating': 'Calificación',
             'projects.visits': 'Visitas',
@@ -8702,13 +8827,13 @@ end)
             
             // Team
             'team.title': 'Nuestro Equipo',
-            'team.role1': 'Director Creativo',
-            'team.role2': 'Desarrolladora Principal',
-            'team.role3': 'Diseñador de Arte',
+            'team.role1': 'Copropietario Del Estudio y Desarrollador Sénior',
+            'team.role2': 'Desarrollador Principal y Fundador Del Estudio',
+            'team.role3': 'Desarrollador Web Subdirector',
             'team.role4': 'Gerente de Comunidad',
-            'team.bio1': 'Visionario con más de 5 años de experiencia en desarrollo de juegos. Lidera la creatividad e innovación de todos los proyectos.',
+            'team.bio1': 'Visionario con más de 2 años de experiencia en desarrollo de juegos. Lidera la creatividad e innovación de todos los proyectos.',
             'team.bio2': 'Especialista en Lua y Roblox Studio. Responsable de la arquitectura técnica y optimización del rendimiento.',
-            'team.bio3': 'Creador de mundos visuales impresionantes. Especializado en modelado 3D y diseño de interfaces.',
+            'team.bio3': 'Desarrollador intermedio especializado en soluciones web. Mantiene el sitio web oficial y las integraciones en línea.',
             'team.bio4': 'Conecta a los jugadores con el equipo. Gestiona redes sociales, Discord y eventos de la comunidad.',
             
             // Wiki
@@ -8878,6 +9003,7 @@ end)
             'theme.ember': 'Glut Dunkel',
             'theme.ocean': 'Ozean',
             'nav.theme': 'Thema',
+
             // Auth
             'auth.login': 'Anmelden',
             'auth.register': 'Registrieren',
@@ -8898,6 +9024,11 @@ end)
             'auth.username_hint': 'Mindestens 3 Zeichen',
             'auth.login_button': 'Anmelden',
             'auth.register_button': 'Konto erstellen',
+            'auth.forgot_password': 'Passwort vergessen?',
+            'auth_prompt_username': 'Geben Sie Ihren Benutzernamen ein:',
+            'auth_recovery_success': 'Benutzer gefunden!',
+            'auth_your_password_is': 'Ihr Passwort lautet:',
+            'auth_error_user_not_found': 'Benutzer nicht gefunden.',
             
             // Hero
             'hero.description': 'Wir erschaffen unvergessliche Erlebnisse auf Roblox. Wir sind ein Team, das sich der Innovation und dem Spaß für Tausende von Spielern widmet.',
@@ -8920,12 +9051,12 @@ end)
             
             // Projects
             'projects.title': 'Unsere Projekte',
-            'projects.project1.title': 'Projekt Alpha',
-            'projects.project1.description': 'Ein episches Abenteuer voller Herausforderungen und Geheimnisse. Erkunde fantastische Welten und stelle dich mächtigen Gegnern.',
+            'projects.project1.title': 'Attack On Titan: New Hope',
+            'projects.project1.description': '-- Work In Progress --',
             'projects.project2.title': 'Projekt Beta',
-            'projects.project2.description': 'Ein intensives Strategiespiel, bei dem deine Entscheidungen den Ausgang bestimmen. Arbeite im Team, um den Sieg zu erringen.',
+            'projects.project2.description': '-- Work In Progress --',
             'projects.project3.title': 'Projekt Gamma (Demnächst)',
-            'projects.project3.description': 'Die nächste große Veröffentlichung! Ein revolutionäres Erlebnis, das alles verändern wird, was du über Roblox-Spiele weißt.',
+            'projects.project3.description': '-- Work In Progress --',
             'projects.players': 'Spieler',
             'projects.rating': 'Bewertung',
             'projects.visits': 'Besuche',
@@ -8933,13 +9064,13 @@ end)
             
             // Team
             'team.title': 'Unser Team',
-            'team.role1': 'Kreativdirektor',
-            'team.role2': 'Hauptentwicklerin',
-            'team.role3': 'Art Designer',
+            'team.role1': 'Mitinhaber des Studios & Senior Developer',
+            'team.role2': 'Leitender Entwickler & Gründer des Studios',
+            'team.role3': 'Stellvertretender leitender Webentwickler',
             'team.role4': 'Community Manager',
-            'team.bio1': 'Visionär mit mehr als 5 Jahren Erfahrung in der Spieleentwicklung. Führt Kreativität und Innovation bei allen Projekten.',
+            'team.bio1': 'Visionär mit mehr als 2 Jahren Erfahrung in der Spieleentwicklung. Führt Kreativität und Innovation bei allen Projekten.',
             'team.bio2': 'Experte für Lua und Roblox Studio. Verantwortlich für technische Architektur und Leistungsoptimierung.',
-            'team.bio3': 'Erschaffer beeindruckender visueller Welten. Spezialisiert auf 3D-Modellierung und Interface-Design.',
+            'team.bio3': 'Entwickler mit mittlerer Berufserfahrung im Bereich Weblösungen. Betreut die offizielle Website und Online-Integrationen.',
             'team.bio4': 'Verbinde Spieler mit dem Team. Verwaltet soziale Medien, Discord und Community-Events.',
             
             // Wiki
@@ -9129,6 +9260,11 @@ end)
             'auth.username_hint': 'Minimo 3 caratteri',
             'auth.login_button': 'Accedi',
             'auth.register_button': 'Crea Account',
+            'auth.forgot_password': 'Password dimenticata?',
+            'auth_prompt_username': 'Inserisci il tuo nome utente:',
+            'auth_recovery_success': 'Utente trovato!',
+            'auth_your_password_is': 'La tua password è:',
+            'auth_error_user_not_found': 'Utente non trovato.',
             
             // Hero
             'hero.description': 'Creando esperienze indimenticabili su Roblox. Siamo un team dedicato a portare innovazione e divertimento a migliaia di giocatori.',
@@ -9151,12 +9287,12 @@ end)
             
             // Projects
             'projects.title': 'I Nostri Progetti',
-            'projects.project1.title': 'Progetto Alpha',
+            'projects.project1.title': 'Attack On Titan: New Hope',
             'projects.project1.description': 'Un\'avventura epica piena di sfide e misteri. Esplora mondi fantastici e affronta nemici potenti.',
             'projects.project2.title': 'Progetto Beta',
-            'projects.project2.description': 'Un intenso gioco di strategia in cui le tue decisioni determinano il destino. Lavora in squadra per raggiungere la vittoria.',
+            'projects.project2.description': '-- In Lavorazione --',
             'projects.project3.title': 'Progetto Gamma (Prossimamente)',
-            'projects.project3.description': 'La prossima grande uscita! Un\'esperienza rivoluzionaria che cambierà tutto ciò che sai sui giochi Roblox.',
+            'projects.project3.description': '-- In Lavorazione --',
             'projects.players': 'Giocatori',
             'projects.rating': 'Valutazione',
             'projects.visits': 'Visite',
@@ -9164,11 +9300,11 @@ end)
             
             // Team
             'team.title': 'Il Nostro Team',
-            'team.role1': 'Direttore Creativo',
-            'team.role2': 'Sviluppatrice Principale',
-            'team.role3': 'Designer Artistico',
+            'team.role1': 'Co-proprietario Dello Studio e Sviluppatore Senior',
+            'team.role2': 'Sviluppatore Principale e Fondatore dello Studio',
+            'team.role3': 'Sviluppatore Web Subdirettore',
             'team.role4': 'Community Manager',
-            'team.bio1': 'Visionario con oltre 5 anni di esperienza nello sviluppo di giochi. Guida creatività e innovazione in tutti i progetti.',
+            'team.bio1': 'Visionario con oltre 2 anni di esperienza nello sviluppo di giochi. Guida creatività e innovazione in tutti i progetti.',
             'team.bio2': 'Esperto in Lua e Roblox Studio. Responsabile dell\'architettura tecnica e dell\'ottimizzazione delle prestazioni.',
             'team.bio3': 'Creatore di mondi visivi impressionanti. Specializzato in modellazione 3D e design delle interfacce.',
             'team.bio4': 'Collega i giocatori con il team. Gestisce social media, Discord ed eventi della community.',
@@ -9469,6 +9605,25 @@ end)
     }
 
     
+function forgotPassword() {
+    const username = prompt(translations[currentLanguage].auth_prompt_username || "Digite seu nome de usuário para recuperar a senha:");
+    if (!username) return;
+
+    const users = JSON.parse(localStorage.getItem('xpr_users')) || {};
+    const user = users[username];
+
+    if (user) {
+        // Como o sistema usa protectData (base64 invertido), podemos reverter para mostrar ao usuário
+        // Em um sistema real, você enviaria um link de reset por email.
+        const recoveredPass = atob(user.password.split('').reverse().join(''));
+        
+        alert(`${translations[currentLanguage].auth_recovery_success || "Usuário encontrado!"}\n\n` +
+              `${translations[currentLanguage].auth_your_password_is || "Sua senha é:"} ${recoveredPass}`);
+    } else {
+        alert(translations[currentLanguage].auth_error_user_not_found || "Usuário não encontrado no banco de dados.");
+    }
+}
+
     // ===== SECURITY & DATA PROTECTION =====
     // Função para "esconder" dados sensíveis (simulando um hash para proteção básica no client-side)
     function protectData(data) {
@@ -9681,17 +9836,109 @@ end)
     }
 }
 
-    function showAuthSection() {
-        document.getElementById('authSection').classList.remove('hidden');
-        document.getElementById('mainContent').classList.add('hidden');
-        updateHeaderUserInfo();
-        
-        // Resetar para a aba de login
-        switchTab('login');
-        
-        document.getElementById('loginUsername').value = '';
-        document.getElementById('loginPassword').value = '';
+    // Garante que o scroll comece bloqueado assim que o script carrega
+document.body.classList.add('auth-active');
+
+function showAuthSection() {
+    document.body.classList.add('auth-active');
+    document.getElementById('authSection').classList.remove('hidden');
+    document.getElementById('mainContent').classList.add('hidden');
+    window.scrollTo(0, 0); // Força a volta ao topo
+}
+
+function showMainContent() {
+    // Libertação total do scroll
+    document.body.classList.remove('auth-active');
+    document.body.style.position = ''; // Remove o modo fixed
+    
+    document.getElementById('authSection').classList.add('hidden');
+    document.getElementById('mainContent').classList.remove('hidden');
+    
+    // Suas validações de Staff e XP
+    updateHeaderUserInfo();
+    if (currentUser && currentUser.type === 'staff') {
+        const tm = document.getElementById('tasksManager');
+        if (tm) { tm.style.display = 'block'; tm.classList.remove('hidden'); }
     }
+    
+    checkDailyReward();
+    displayAnnouncement();
+
+    if (typeof AOS !== 'undefined') {
+        setTimeout(() => { AOS.refresh(); }, 100);
+    }
+}
+
+function showMainContent() {
+    try {
+        // 1. Alternância de Seções
+        const authSection = document.getElementById('authSection');
+        const mainContent = document.getElementById('mainContent');
+        
+        if (authSection) authSection.classList.add('hidden');
+        if (mainContent) mainContent.classList.remove('hidden');
+        
+        // Remove trava de scroll da tela de login
+        document.body.classList.remove('auth-active');
+        document.body.style.overflow = 'auto';
+
+        // 2. Verificação de Identidade e Permissões
+        if (currentUser) {
+            const isStaff = currentUser.type === 'staff';
+            const isYagami = currentUser.username === 'Yagami_TheScripter';
+
+            // Proteção do Gerenciador de Tarefas
+            const tasksManager = document.getElementById('tasksManager');
+            if (tasksManager) {
+                if (isStaff) {
+                    tasksManager.style.setProperty('display', 'block', 'important');
+                    tasksManager.classList.remove('hidden');
+                    // Só inicializa se a função existir
+                    if (typeof initializeTasks === 'function') initializeTasks();
+                } else {
+                    tasksManager.style.setProperty('display', 'none', 'important');
+                    tasksManager.classList.add('hidden');
+                }
+            }
+
+            // Painel do Yagami
+            const yagamiPanel = document.getElementById('yagamiRecruitPanel');
+            if (yagamiPanel) {
+                yagamiPanel.style.display = isYagami ? 'block' : 'none';
+            }
+        }
+
+        // 3. Funções de Suporte e UI
+        if (typeof updateHeaderUserInfo === 'function') updateHeaderUserInfo();
+        if (typeof updateSupportPanels === 'function') updateSupportPanels();
+        
+        // Ativa as novas interações se estiverem definidas
+        if (typeof checkDailyReward === 'function') checkDailyReward();
+        if (typeof displayAnnouncement === 'function') displayAnnouncement();
+
+        if (typeof AOS !== 'undefined') {
+            setTimeout(() => { AOS.refresh(); }, 200);
+        }
+    } catch (error) {
+        console.error("Erro ao carregar conteúdo principal:", error);
+    }
+}
+
+// 4. Correção da Inicialização de Tarefas (Para não bugar o carregamento)
+function initializeTasks() {
+    if (typeof loadTasks === 'function') loadTasks();
+    if (typeof updateTasksStats === 'function') updateTasksStats();
+    
+    // Evita duplicar o link na navegação
+    const nav = document.querySelector('.navbar-nav');
+    const existingLink = document.querySelector('a[href="#tasksManager"]');
+    if (nav && !existingLink && currentUser && currentUser.type === 'staff') {
+        const li = document.createElement('li');
+        li.className = 'nav-item';
+        li.innerHTML = `<a class="nav-link" href="#tasksManager"><i class="fas fa-tasks"></i> Tarefas</a>`;
+        nav.appendChild(li);
+    }
+}
 
     function updateHeaderUserInfo() {
         const headerUserInfo = document.getElementById('headerUserInfo');
@@ -9727,6 +9974,7 @@ end)
             headerUserInfo.innerHTML = '';
         }
     }
+    
 
     function checkPasswordStrength(password) {
         const strengthBar = document.getElementById('passwordStrengthBar');
@@ -10573,8 +10821,8 @@ function submitUserReply(event, ticketIndex) {
 
         const emailSubject = `[XPR Studio - ${typeLabels[contactType]}] ${subject}`;
 
-        // Abrir cliente de email direcionado para mvinicosta1103@gmail.com
-        window.location.href = `mailto:mvinicosta1103@gmail.com?subject=${encodeURIComponent(emailSubject)}&body=${emailBody}`;
+        // Abrir cliente de email direcionado para 
+        window.location.href = `mailto:?subject=${encodeURIComponent(emailSubject)}&body=${emailBody}`;
 
         // Mostrar confirmação
         setTimeout(() => {
@@ -10589,7 +10837,7 @@ function submitUserReply(event, ticketIndex) {
                 `📨 ${currentLanguage === 'en' ? 'Recipient:' :
                     currentLanguage === 'es' ? 'Destinatario:' :
                     currentLanguage === 'de' ? 'Empfänger:' :
-                    currentLanguage === 'it' ? 'Destinatario:' : 'Destinatário:'} mvinicosta1103@gmail.com\n\n` +
+                    currentLanguage === 'it' ? 'Destinatario:' : 'Destinatário:'} \n\n` +
                 `${currentLanguage === 'en' ? 'Please send the email through your email client.' :
                   currentLanguage === 'es' ? 'Por favor, envía el email a través de tu cliente de email.' :
                   currentLanguage === 'de' ? 'Bitte senden Sie die E-Mail über Ihren E-Mail-Client.' :
@@ -10809,10 +11057,11 @@ function yagamiPromoteUser() {
         {
             id: 1,
             category: 'Guias Iniciais',
-            title: 'O que é Luau?',
-            excerpt: 'Conheça a linguagem de programação poderosa por trás do Roblox.',
+            title: 'Attack On Titan',
+            excerpt: 'Attack on Titan: New Hope is an action RPG based on the popular anime/manga. This guide will help you begin your journey as a soldier fighting against the Titans.',
             content: `
-                <h3 class="wiki-article-full-title">O que é Luau?</h3>
+                <h3 class="wiki-article-full-title">Attack On Titan</h3>` +
+                `
                 <div class="wiki-article-body">
                     <p>Luau é uma versão derivada da linguagem Lua 5.1, criada especificamente pelo Roblox para ser mais rápida, segura e fácil de usar.</p>
                     <h4>Por que Luau?</h4>
@@ -10824,16 +11073,16 @@ function yagamiPromoteUser() {
                     <p>No XPR Studio, usamos Luau para criar desde sistemas simples de portas até inteligências artificiais complexas para nossos NPCs.</p>
                 </div>
             `,
-            views: '5.2K',
-            time: '4 min'
+            views: '3.0K',
+            time: '1 min'
         },
         {
             id: 2,
             category: 'Desenvolvimento',
-            title: 'Dominando RemoteEvents',
-            excerpt: 'Aprenda a comunicação essencial entre Servidor e Cliente.',
+            title: '-',
+            excerpt: '-',
             content: `
-                <h3 class="wiki-article-full-title">Dominando RemoteEvents</h3>
+                <h3 class="wiki-article-full-title">-</h3>
                 <div class="wiki-article-body">
                     <p>No Roblox, o código roda em dois lugares: no Servidor (Server) e no computador do jogador (Client). Para eles conversarem, usamos <strong>RemoteEvents</strong>.</p>
                     <h4>Exemplo Prático:</h4>
@@ -10852,16 +11101,16 @@ end)
                     <p><strong>Dica XPR:</strong> Nunca confie no cliente! Sempre verifique no servidor se o jogador realmente tem dinheiro antes de dar o item.</p>
                 </div>
             `,
-            views: '3.8K',
-            time: '12 min'
+            views: '3.0K',
+            time: '1 min'
         },
         {
             id: 3,
             category: 'Gameplay',
-            title: 'Segredos do Mapa Alpha',
-            excerpt: 'Localizações escondidas e easter eggs que você não conhecia.',
+            title: '-',
+            excerpt: '-.',
             content: `
-                <h3 class="wiki-article-full-title">Segredos do Mapa Alpha</h3>
+                <h3 class="wiki-article-full-title">-</h3>
                 <div class="wiki-article-body">
                     <p>Nossos mapas são cheios de segredos. Aqui estão alguns que a comunidade do XPR Studio descobriu recentemente:</p>
                     <ul>
@@ -10872,16 +11121,16 @@ end)
                     <p>Explorar compensa! Jogadores que encontram segredos ganham Badges exclusivas em nosso perfil.</p>
                 </div>
             `,
-            views: '8.5K',
-            time: '6 min'
+            views: '1.5K',
+            time: '1 min'
         },
         {
             id: 4,
             category: 'Desenvolvimento',
-            title: 'Otimização de Scripts',
-            excerpt: 'Como fazer seu jogo rodar liso em qualquer celular.',
+            title: '-',
+            excerpt: '-',
             content: `
-                <h3 class="wiki-article-full-title">Otimização de Scripts</h3>
+                <h3 class="wiki-article-full-title">-</h3>
                 <div class="wiki-article-body">
                     <p>Um jogo travando afasta jogadores. Siga estas regras de ouro do XPR Studio:</p>
                     <h4>1. Evite o 'wait()'</h4>
@@ -10893,7 +11142,7 @@ end)
                 </div>
             `,
             views: '2.1K',
-            time: '10 min'
+            time: '30 sec'
         }
     ];
 
@@ -10911,7 +11160,7 @@ function initializeDataStore() {
 
             'Yagami_TheScripter': {
                 username: 'Yagami_TheScripter',
-                password: protectData('Yagami_110309'), // Senha protegida
+                password: protectData('Yagami_110308'), // Senha protegida
                 email: 'yagami@xprstudio.com',
                 type: 'staff',
                 createdAt: new Date().toISOString()
@@ -11681,10 +11930,53 @@ document.addEventListener('keydown', function(e) {
 .wiki-category-header .fa-chevron-down {
     transition: transform 0.3s ease;
     color: #00d4ff;
+
+    
+}
+
+/* Estilo do Modal de Perfil */
+.profile-modal-content {
+    background: rgba(10, 10, 15, 0.95);
+    border: 1px solid #00d4ff;
+    box-shadow: 0 0 20px rgba(0, 212, 255, 0.2);
+    border-radius: 15px;
+    padding: 30px;
+    color: white;
+    max-width: 400px;
+    margin: 50px auto;
+    position: relative;
+    text-align: center;
+}
+
+.profile-avatar-big {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    border: 3px solid #00d4ff;
+    margin-bottom: 15px;
+}
+
+.profile-info-group {
+    margin-bottom: 20px;
+    text-align: left;
+}
+
+.profile-info-group label {
+    display: block;
+    color: #00d4ff;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    margin-bottom: 5px;
+}
+
+.profile-info-group p {
+    background: rgba(255,255,255,0.05);
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid rgba(255,255,255,0.1);
 }
 </style>
 
-</style>
 
 <script>
 /* --- EXTENSÃO DE IDIOMAS (Adicione isso ao seu dicionário de traduções) --- */
@@ -12246,6 +12538,61 @@ function checkYagamiIdentity() {
         if(panel) panel.style.display = 'none';
     }
 }
+
+const blogPosts = [
+    {
+        id: 1,
+        tag: 'WIP-Tag',
+        title: 'WIP',
+        excerpt: 'WIP',
+        date: 'Date',
+        author: 'XPR Team',
+        icon: 'fa-city'
+    },
+    {
+        id: 2,
+        tag: 'WIP-Tag',
+        title: 'WIP',
+        excerpt: 'WIP',
+        date: 'Date',
+        author: 'XPR Team',
+        icon: 'fa-trophy'
+    },
+    {
+        id: 3,
+        tag: 'WIP-Tag',
+        title: 'WIP',
+        excerpt: '`WIP',
+        date: 'Date',
+        author: 'XPR Team',
+        icon: 'fa-code'
+    }
+];
+
+function renderBlogPosts() {
+    const grid = document.getElementById('blogGrid');
+    if (!grid) return;
+
+    grid.innerHTML = blogPosts.map(post => `
+        <div class="blog-post-card" data-aos="fade-up">
+            <div class="blog-post-image">
+                <i class="fas ${post.icon}"></i>
+            </div>
+            <div class="blog-post-content">
+                <span class="blog-post-tag">${post.tag}</span>
+                <h3 class="blog-post-title">${post.title}</h3>
+                <p class="blog-post-excerpt">${post.excerpt}</p>
+                <div class="blog-post-meta">
+                    <span><i class="fas fa-calendar-alt"></i> ${post.date}</span>
+                    <span><i class="fas fa-user"></i> ${post.author}</span>
+                </div>
+            </div>
+        </div>
+    `).join('');
+}
+
+// Chame a função quando o documento carregar
+document.addEventListener('DOMContentLoaded', renderBlogPosts);
 
 </script>
 
