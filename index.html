@@ -4330,18 +4330,32 @@ document.getElementById('codeEditor').addEventListener('input', function() {
 
 <div id="yagamiRecruitPanel" style="display: none; background: rgba(0, 212, 255, 0.05); border: 2px dashed #00d4ff; padding: 20px; border-radius: 15px; margin-bottom: 25px;">
     <h3 style="color: #00d4ff;"><i class="fas fa-user-shield"></i> Painel de Gerenciamento Staff (Mestre: Yagami)</h3>
-    <p>Gerencie o cargo de usuários cadastrados no site.</p>
-    <div class="input-group">
-        <input type="text" id="recruitUsername" class="form-control" placeholder="Username exato do usuário..." style="background: rgba(0,0,0,0.2); color: white; border: 1px solid #00d4ff;">
+    <p>Gerencie cargos, banimentos e moderação de conteúdo.</p>
+    
+    <div class="input-group mb-3">
+        <input type="text" id="recruitUsername" class="form-control" placeholder="Username do usuário..." style="background: rgba(0,0,0,0.2); color: white; border: 1px solid #00d4ff;">
         <div class="input-group-append">
             <button class="btn btn-info" onclick="yagamiManageStaff('promote')">
                 <i class="fas fa-check"></i> Promover
             </button>
-            <button class="btn btn-danger" onclick="yagamiManageStaff('demote')" style="margin-left: 5px; background-color: #ff4757; border-color: #ff4757;">
+            <button class="btn btn-danger" onclick="yagamiManageStaff('demote')" style="margin-left: 5px;">
                 <i class="fas fa-user-minus"></i> Remover Staff
+            </button>
+            <button class="btn btn-dark" onclick="yagamiManageUser('ban')" style="margin-left: 5px; background: #000; border: 1px solid #ff4757; color: #ff4757;">
+                <i class="fas fa-gavel"></i> Banir
             </button>
         </div>
     </div>
+
+    <div class="input-group">
+        <input type="number" id="highlightPostId" class="form-control" placeholder="ID do Post ou Comentário..." style="background: rgba(0,0,0,0.2); color: white; border: 1px solid #ffd700;">
+        <div class="input-group-append">
+            <button class="btn btn-warning" onclick="yagamiHighlightComment()" style="color: #111; font-weight: bold;">
+                <i class="fas fa-star"></i> Destacar Comentário
+            </button>
+        </div>
+    </div>
+    
     <div id="recruitFeedback" style="margin-top: 10px; font-weight: bold;"></div>
 </div>
 
@@ -6227,6 +6241,35 @@ setTimeout(updateNotesUI, 2000);
             transform: translateY(0);
         }
     }
+
+    /* Estilos Avançados para o Business Panel */
+.mission-card {
+    transition: transform 0.3s ease, border-color 0.3s ease;
+    border-left: 5px solid #00d4ff; /* Indicador de status padrão */
+}
+
+.mission-card.priority-high { border-left-color: #ff4757; }
+.mission-card.priority-medium { border-left-color: #ffa502; }
+
+.status-badge {
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    font-weight: bold;
+}
+
+.status-open { background: rgba(0, 212, 255, 0.2); color: #00d4ff; }
+.status-resolved { background: rgba(46, 213, 115, 0.2); color: #2ed573; }
+
+.internal-notes {
+    background: rgba(0,0,0,0.3);
+    border-radius: 8px;
+    padding: 10px;
+    margin-top: 15px;
+    font-size: 0.85rem;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
 </style>
 
 <script>
@@ -12491,6 +12534,66 @@ function yagamiManageStaff(action) {
         return;
     }
 
+    // Função para Banir Usuários
+window.yagamiManageUser = function(action) {
+    const username = document.getElementById('recruitUsername').value.trim();
+    const feedback = document.getElementById('recruitFeedback');
+    const users = JSON.parse(localStorage.getItem('xpr_users')) || {};
+
+    if (!users[username]) {
+        feedback.innerHTML = `<span style="color: #ff4757;">❌ Usuário ${username} não encontrado!</span>`;
+        return;
+    }
+
+    if (action === 'ban') {
+        if (confirm(`Tem certeza que deseja BANIR permanentemente o usuário ${username}?`)) {
+            // Adiciona propriedade de banido ao objeto do usuário
+            users[username].isBanned = true;
+            localStorage.setItem('xpr_users', JSON.stringify(users));
+            
+            feedback.innerHTML = `<span style="color: #ff4757;">🔨 Usuário ${username} foi banido com sucesso!</span>`;
+            
+            // Se o usuário banido for o atual, desloga ele
+            if (currentUser && currentUser.username === username) {
+                handleLogout();
+            }
+        }
+    }
+};
+
+// Função para Destacar Comentários no Blog
+window.yagamiHighlightComment = function() {
+    const id = document.getElementById('highlightPostId').value;
+    const feedback = document.getElementById('recruitFeedback');
+
+    if (!id) {
+        feedback.innerHTML = `<span style="color: #ff4757;">❌ Insira um ID válido.</span>`;
+        return;
+    }
+
+    // Lógica para salvar o destaque no LocalStorage
+    let highlights = JSON.parse(localStorage.getItem('xpr_highlights')) || [];
+    if (!highlights.includes(id)) {
+        highlights.push(id);
+        localStorage.setItem('xpr_highlights', JSON.stringify(highlights));
+        feedback.innerHTML = `<span style="color: #ffd700;">⭐ Conteúdo #${id} destacado no Blog!</span>`;
+        if (typeof renderBlogPosts === "function") renderBlogPosts();
+    } else {
+        feedback.innerHTML = `<span style="color: #00d4ff;">ℹ️ Este conteúdo já está destacado.</span>`;
+    }
+};
+
+// Bloqueio de Login para Usuários Banidos (Atualize sua handleLogin)
+const originalValidateUser = window.validateUser;
+window.validateUser = function(username, password) {
+    const user = originalValidateUser(username, password);
+    if (user && user.isBanned) {
+        alert("Sua conta foi banida por um administrador.");
+        return null; 
+    }
+    return user;
+};
+
     // Carrega dados atuais
     let users = JSON.parse(localStorage.getItem('xpr_users') || '{}');
     let staffList = JSON.parse(localStorage.getItem('xpr_staff_list') || '[]');
@@ -12593,6 +12696,95 @@ function renderBlogPosts() {
 
 // Chame a função quando o documento carregar
 document.addEventListener('DOMContentLoaded', renderBlogPosts);
+
+// Função para renderizar as solicitações de negócio com filtros e ações
+function renderBusinessRequests(filter = 'all') {
+    const listContainer = document.getElementById('businessRequestsList');
+    const requests = JSON.parse(localStorage.getItem('xpr_business_requests')) || [];
+    
+    listContainer.innerHTML = '';
+
+    const filtered = filter === 'all' ? requests : requests.filter(r => r.status === filter);
+
+    filtered.forEach((req, index) => {
+        const card = document.createElement('div');
+        card.className = `mission-card ${req.priority === 'High' ? 'priority-high' : ''}`;
+        card.innerHTML = `
+            <div class="d-flex justify-content-between">
+                <span class="status-badge ${req.status === 'open' ? 'status-open' : 'status-resolved'}">${req.status}</span>
+                <small class="text-muted">#${index + 1}</small>
+            </div>
+            <h4 class="mt-2 text-white">${req.subject}</h4>
+            <p class="mb-1"><strong>Cliente:</strong> ${req.name}</p>
+            <p class="small text-light" style="opacity: 0.8;">${req.message}</p>
+            
+            <div class="internal-notes">
+                <i class="fas fa-sticky-note text-warning"></i> 
+                <strong>Nota Interna:</strong> 
+                <span id="noteText-${index}">${req.internalNote || 'Sem notas...'}</span>
+            </div>
+
+            <div class="mt-3 d-flex gap-2">
+                <button class="btn btn-sm btn-outline-info" onclick="addInternalNote(${index})">
+                    <i class="fas fa-edit"></i> Nota
+                </button>
+                <button class="btn btn-sm btn-success" onclick="updateBizStatus(${index}, 'resolved')">
+                    <i class="fas fa-check"></i> Finalizar
+                </button>
+                <button class="btn btn-sm btn-danger" onclick="deleteBizRequest(${index})">
+                    <i class="fas fa-trash"></i>
+                </button>
+            </div>
+        `;
+        listContainer.appendChild(card);
+    });
+}
+
+// Nova função: Adicionar nota interna para a Staff
+window.addInternalNote = function(index) {
+    const note = prompt("Digite a atualização interna para este projeto:");
+    if (note === null) return;
+
+    let requests = JSON.parse(localStorage.getItem('xpr_business_requests'));
+    requests[index].internalNote = note;
+    localStorage.setItem('xpr_business_requests', JSON.stringify(requests));
+    
+    // Ganho de XP por atualizar processos
+    if(typeof updateStaffXP === 'function') updateStaffXP(5);
+    
+    renderBusinessRequests();
+};
+
+// Função para atualizar status com feedback visual
+window.updateBizStatus = function(index, newStatus) {
+    let requests = JSON.parse(localStorage.getItem('xpr_business_requests')) || [];
+    
+    // Atualiza o status no objeto
+    requests[index].status = newStatus;
+    
+    if(newStatus === 'resolved') {
+        alert("Projeto marcado como concluído! +25 XP Staff");
+        
+        // Atribui XP se a função existir
+        if(typeof updateStaffXP === 'function') updateStaffXP(25);
+        
+        // OPÇÃO DE DELETAR:
+        // Pergunta se deseja remover o ticket da lista agora que está resolvido
+        const shouldDelete = confirm("Deseja remover este ticket da lista permanentemente por já estar resolvido?");
+        
+        if(shouldDelete) {
+            // Remove 1 item na posição 'index'
+            requests.splice(index, 1);
+            alert("Ticket removido com sucesso.");
+        }
+    }
+    
+    // Guarda a lista atualizada (seja com o status novo ou com o item removido)
+    localStorage.setItem('xpr_business_requests', JSON.stringify(requests));
+    
+    // Atualiza a interface visual
+    renderBusinessRequests();
+};
 
 </script>
 
